@@ -94,7 +94,7 @@ font = pygame.font.Font(None, 36)
 
 criar_alvos()
 
-timer = 120
+timer = 121
 clock = pygame.time.Clock()
 start_time = pygame.time.get_ticks()
 
