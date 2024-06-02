@@ -67,17 +67,30 @@ targets = pygame.sprite.Group()
 cursor = Cursor()
 all_sprites.add(cursor)
 
+
 def criar_alvos():
-    for _ in range(5):
+    for _ in range(8):
         target = Target()
         all_sprites.add(target)
         targets.add(target)
+
 
 def reiniciar_jogo():
     all_sprites.empty()
     targets.empty()
     cursor.rect.center = (WIDTH // 2, HEIGHT // 2)
     criar_alvos()
+
+
+def fim_jogo(texto):
+    font = pygame.font.Font(None, 64)
+    text = font.render(str(texto), True, (255, 255, 255))
+    text_rect = text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
+    window.blit(text, text_rect)
+    pygame.display.flip()
+    pygame.time.wait(2000)
+    pygame.quit()
+    sys.exit()
 
 pygame.mixer.music.load("parque_de_diversao.mp3")
 pygame.mixer.music.set_volume(0.08)
@@ -90,11 +103,12 @@ if not menu():
     sys.exit()
 
 pontuacao = 0
+vitoria = 120
 font = pygame.font.Font(None, 36)
 
 criar_alvos()
 
-timer = 121
+timer = 100
 clock = pygame.time.Clock()
 start_time = pygame.time.get_ticks()
 
@@ -111,6 +125,8 @@ while running:
                 targets.add(new_target)
                 balloon_pop.play()
                 pontuacao += 1
+            if pontuacao >= vitoria:
+                fim_jogo("Você Venceu!")
 
     elapsed_time = (pygame.time.get_ticks() - start_time) // 1000
     remaining_time = max(timer - elapsed_time, 0)
@@ -129,11 +145,4 @@ while running:
     clock.tick(60)
 
     if remaining_time <= 0:
-        font = pygame.font.Font(None, 64)
-        text = font.render("Game Over", True, (255, 255, 255))
-        text_rect = text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
-        window.blit(text, text_rect)
-        pygame.display.flip()
-        pygame.time.wait(2000)
-        pygame.quit()
-        sys.exit()
+        fim_jogo("Fim de Jogo")
